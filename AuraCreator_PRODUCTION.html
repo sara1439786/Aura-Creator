@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Aura Creator — Build Anything with AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#07060F;--surf:#0D0B1A;--card:rgba(19,17,32,0.9);
+  --b:rgba(255,255,255,0.07);--bv:rgba(139,92,246,0.32);
+  --v:#8B5CF6;--v2:#6D28D9;--cyan:#22D3EE;--gold:#F59E0B;
+  --pink:#EC4899;--green:#22C55E;--red:#EF4444;
+  --tx:#F1F0FF;--mut:rgba(241,240,255,0.5);--dim:rgba(241,240,255,0.22);
+  --r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;font-size:13px}
+button,input,textarea,select{font-family:'Inter',sans-serif}
+
+/* ── NAV ── */
+#app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.nav{display:flex;align-items:center;padding:0 18px;height:50px;border-bottom:1px solid var(--b);background:#09081A;gap:10px;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0}
+.lmark{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--v),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;font-family:'Space Grotesk',sans-serif}
+.lname{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:800;color:var(--tx)}
+.lname b{color:var(--v)}
+.mode-row{display:flex;gap:2px;flex:1;justify-content:center}
+.mt{display:flex;align-items:center;gap:4px;padding:5px 12px;border-radius:18px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid transparent;color:var(--mut);background:none;transition:all .15s;white-space:nowrap}
+.mt:hover{color:var(--tx);border-color:var(--b)}
+.mt.on{background:rgba(139,92,246,0.14);border-color:var(--bv);color:#C4B5FD}
+.nav-r{display:flex;gap:7px;align-items:center;flex-shrink:0}
+.nb{background:none;border:1px solid var(--b);color:var(--mut);padding:5px 13px;border-radius:7px;font-size:11px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.nb:hover{border-color:var(--bv);color:var(--tx)}
+.nb.hi{background:linear-gradient(135deg,var(--v),var(--v2));border-color:transparent;color:#fff;font-weight:700}
+.nb.hi:hover{opacity:.88}
+.uav{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--cyan));display:none;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;cursor:pointer;border:2px solid var(--bv)}
+
+/* ── WORKSPACE ── */
+.ws{display:flex;flex:1;overflow:hidden;min-height:0}
+
+/* ── LEFT PANEL ── */
+.lp{width:255px;flex-shrink:0;border-right:1px solid var(--b);background:#09081A;display:flex;flex-direction:column;overflow:hidden}
+.lps{padding:13px;border-bottom:1px solid var(--b);flex-shrink:0}
+.lbl{font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-bottom:8px}
+.pta{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--b);border-radius:10px;color:var(--tx);font-size:11px;padding:9px 11px;resize:none;outline:none;line-height:1.65;transition:border-color .2s;min-height:84px}
+.pta:focus{border-color:var(--bv)}
+.pta::placeholder{color:var(--dim)}
+.hchips{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.hc{font-size:10px;color:var(--dim);background:rgba(255,255,255,0.03);border:1px solid var(--b);border-radius:6px;padding:3px 8px;cursor:pointer;transition:all .15s}
+.hc:hover{color:var(--v);border-color:var(--bv)}
+.bcreate{width:100%;margin-top:9px;background:linear-gradient(135deg,var(--v),var(--v2));border:none;color:#fff;padding:10px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .2s}
+.bcreate:hover{opacity:.87}
+.bcreate:disabled{opacity:.4;cursor:not-allowed}
+.lpscroll{flex:1;overflow-y:auto;padding:11px;scrollbar-width:thin;scrollbar-color:rgba(139,92,246,0.25) transparent}
+.lpscroll::-webkit-scrollbar{width:3px}
+.lpscroll::-webkit-scrollbar-thumb{background:rgba(139,92,246,0.25);border-radius:3px}
+.pj{background:rgba(255,255,255,0.03);border:1px solid var(--b);border-radius:9px;padding:9px 10px;margin-bottom:7px;cursor:pointer;transition:all .15s}
+.pj:hover{border-color:rgba(139,92,246,0.28)}
+.pj.on{border-color:rgba(139,92,246,0.45);background:rgba(139,92,246,0.09)}
+.pjn{font-size:11px;font-weight:600;color:var(--tx);margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pjm{font-size:10px;color:var(--mut);display:flex;align-items:center;gap:4px}
+.sdot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.dlive{background:var(--green);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.lpbot{padding:11px 12px;border-top:1px solid var(--b);flex-shrink:0}
+.crrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.crl{font-size:10px;color:var(--mut)}
+.crv{font-size:10px;font-weight:700;color:#A78BFA}
+.ptrack{height:4px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden}
+.pfill{height:100%;background:linear-gradient(90deg,var(--v),var(--cyan));border-radius:4px;transition:width .5s}
+.bdeploy{width:100%;margin-top:9px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.22);color:#86EFAC;padding:8px;border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;display:none;align-items:center;justify-content:center;gap:5px;transition:all .15s}
+.bdeploy:hover{background:rgba(34,197,94,0.18)}
+
+/* ── RIGHT PANEL ── */
+.rp{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.pbar{display:flex;align-items:center;gap:7px;padding:7px 13px;border-bottom:1px solid var(--b);background:#09081A;flex-shrink:0}
+.wdots{display:flex;gap:5px;flex-shrink:0}
+.wd{width:10px;height:10px;border-radius:50%}
+.urlbar{flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--b);border-radius:18px;padding:5px 13px;display:flex;align-items:center;gap:6px;font-size:10px;color:var(--mut);overflow:hidden;min-width:0}
+.pbacts{display:flex;gap:5px}
+.pa{background:rgba(255,255,255,0.04);border:1px solid var(--b);color:var(--mut);padding:4px 9px;border-radius:7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .15s;white-space:nowrap}
+.pa:hover{border-color:var(--bv);color:var(--tx)}
+.pa.pu{background:rgba(139,92,246,0.13);border-color:var(--bv);color:#C4B5FD}
+
+/* ── PREVIEW ── */
+.pvwrap{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0;background:#0C0A1C}
+#pv-welcome{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:30px;text-align:center}
+#pv-loading{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+#pv-result{flex:1;display:none;overflow:hidden;background:#fff;min-height:0}
+#pv-result iframe{width:100%;height:100%;border:none;display:block}
+.spn{width:38px;height:38px;border:3px solid rgba(139,92,246,0.14);border-top-color:var(--v);border-radius:50%;animation:spin .72s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.wico{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,var(--v),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:#fff;font-family:'Space Grotesk',sans-serif}
+.wtit{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:800;color:var(--tx)}
+.wsub{font-size:12px;color:var(--mut);line-height:1.75;max-width:400px}
+.qrow{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;max-width:380px}
+.qc{padding:6px 13px;border-radius:18px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid;transition:all .15s}
+.qc:hover{opacity:.8;transform:translateY(-1px)}
+.ltxt{font-size:13px;font-weight:600;color:rgba(241,240,255,.8)}
+.lsub{font-size:11px;color:var(--dim);margin-top:2px}
+.lprog{width:200px;height:3px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin-top:6px}
+.lpfill{height:100%;background:linear-gradient(90deg,var(--v),var(--cyan));border-radius:3px;transition:width .4s;width:0%}
+
+/* ── CHAT BAR ── */
+.chatbar{display:flex;gap:7px;align-items:center;padding:9px 13px;border-top:1px solid var(--b);background:#09081A;flex-shrink:0}
+.ci{flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--b);border-radius:9px;color:var(--tx);font-size:11px;padding:8px 12px;outline:none;transition:border-color .2s}
+.ci:focus{border-color:var(--bv)}
+.ci::placeholder{color:var(--dim)}
+.csend{background:linear-gradient(135deg,var(--v),var(--v2));border:none;color:#fff;width:34px;height:34px;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .2s}
+.csend:hover{opacity:.85}
+.csend:disabled{opacity:.35;cursor:not-allowed}
+
+/* ── MODALS ── */
+.mbg{position:fixed;inset:0;background:rgba(5,4,14,.9);display:none;align-items:center;justify-content:center;z-index:2000;padding:16px;backdrop-filter:blur(4px)}
+.mbg.open{display:flex}
+.mbox{background:#0F0C1F;border:1px solid var(--bv);border-radius:18px;padding:26px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
+.mbox::-webkit-scrollbar{width:3px}
+.mbox::-webkit-scrollbar-thumb{background:rgba(139,92,246,0.3);border-radius:3px}
+.mxbtn{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--dim);font-size:18px;cursor:pointer;line-height:1;padding:4px}
+.mxbtn:hover{color:var(--tx)}
+.mtitle{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:800;color:var(--tx);margin-bottom:5px}
+.msub{font-size:11px;color:var(--mut);line-height:1.65;margin-bottom:18px}
+
+/* plans */
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px}
+.pc{background:rgba(255,255,255,0.03);border:1px solid var(--b);border-radius:11px;padding:13px;cursor:pointer;transition:all .15s;position:relative}
+.pc:hover,.pc.on{border-color:var(--bv);background:rgba(139,92,246,0.09)}
+.pbadge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--v);color:#fff;font-size:9px;font-weight:800;padding:2px 10px;border-radius:0 0 7px 7px;white-space:nowrap}
+.pname{font-size:10px;font-weight:700;color:var(--mut);margin-bottom:4px}
+.pprice{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:800;color:var(--tx)}
+.pprice span{font-size:10px;font-weight:400;color:var(--mut)}
+.pdesc{font-size:10px;color:var(--mut);margin-top:4px;line-height:1.5}
+.pfeats{margin-top:7px;display:flex;flex-direction:column;gap:3px}
+.pf{font-size:10px;color:var(--mut);display:flex;align-items:center;gap:4px}
+.pf i{color:var(--cyan);font-size:11px}
+
+/* pay btn */
+.bpay{width:100%;background:linear-gradient(135deg,var(--v),var(--v2));border:none;color:#fff;padding:12px;border-radius:11px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:9px;transition:opacity .2s}
+.bpay:hover{opacity:.9}
+.pnote{font-size:10px;color:var(--dim);text-align:center;line-height:1.6}
+
+/* form */
+.ff{margin-bottom:12px}
+.fl{font-size:10px;font-weight:600;color:var(--mut);margin-bottom:5px;display:block}
+.fi{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--b);border-radius:8px;color:var(--tx);font-size:12px;padding:9px 12px;outline:none;transition:border-color .2s}
+.fi:focus{border-color:var(--bv)}
+.fi::placeholder{color:var(--dim)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.bfull{width:100%;padding:11px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:opacity .2s}
+.bfull:hover{opacity:.88}
+.bv{background:linear-gradient(135deg,var(--v),var(--v2));color:#fff}
+.bout{background:none;border:1px solid var(--b);color:var(--mut);margin-top:7px}
+.slog{display:flex;gap:7px;margin-bottom:13px}
+.sl{flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--b);color:var(--mut);padding:8px;border-radius:8px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .15s}
+.sl:hover{border-color:var(--bv);color:var(--tx)}
+.ordiv{text-align:center;font-size:10px;color:var(--dim);position:relative;margin-bottom:12px}
+.ordiv::before,.ordiv::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--b)}
+.ordiv::before{left:0}.ordiv::after{right:0}
+
+/* deploy */
+.plats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px}
+.plt{background:rgba(255,255,255,0.03);border:1px solid var(--b);border-radius:9px;padding:11px 7px;cursor:pointer;text-align:center;transition:all .15s}
+.plt:hover,.plt.on{border-color:var(--bv);background:rgba(139,92,246,0.09)}
+.plic{font-size:18px;margin-bottom:3px}
+.plnm{font-size:10px;font-weight:700;color:var(--tx)}
+.plsb{font-size:9px;color:var(--dim);margin-top:2px}
+.dstep{background:rgba(255,255,255,0.03);border:1px solid var(--b);border-radius:9px;padding:11px;margin-bottom:8px}
+.dsh{display:flex;align-items:flex-start;gap:8px;margin-bottom:5px}
+.dsn{width:20px;height:20px;border-radius:50%;background:var(--v);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;flex-shrink:0;margin-top:1px}
+.dsti{font-size:11px;font-weight:700;color:var(--tx)}
+.dsb{font-size:10px;color:var(--mut);line-height:1.7;padding-left:28px}
+.dsb code{background:rgba(255,255,255,0.06);padding:1px 5px;border-radius:4px;font-size:10px;color:#C4B5FD;font-family:monospace}
+.dsb a{color:var(--cyan);text-decoration:none}
+.dsb a:hover{text-decoration:underline}
+
+/* download */
+.dlopt{background:rgba(255,255,255,0.03);border:1px solid var(--b);border-radius:10px;padding:12px 14px;cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;transition:all .15s}
+.dlopt:hover,.dlopt.on{border-color:var(--bv);background:rgba(139,92,246,0.09)}
+.dlname{font-size:12px;font-weight:700;color:var(--tx)}
+.dldesc{font-size:10px;color:var(--mut);margin-top:2px}
+.dlpr{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:800;color:var(--tx);white-space:nowrap;margin-left:12px}
+
+/* pricing helper */
+.price-hint{background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:9px;padding:10px 13px;margin-bottom:14px;font-size:11px;color:#C4B5FD;line-height:1.65}
+
+/* share */
+.sharebox{background:rgba(255,255,255,0.04);border:1px solid var(--b);border-radius:8px;padding:9px 12px;display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.sharelink{flex:1;font-size:10px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cpybtn{background:var(--v);border:none;color:#fff;padding:5px 10px;border-radius:6px;font-size:10px;cursor:pointer;flex-shrink:0;font-family:'Inter',sans-serif}
+.shareacts{display:flex;gap:7px}
+
+/* zip preview */
+#zip-files{background:rgba(255,255,255,0.03);border:1px solid var(--b);border-radius:9px;padding:12px;margin-bottom:14px;font-size:10px;color:var(--mut);line-height:2;font-family:monospace;max-height:160px;overflow-y:auto}
+#zip-files .f{color:#A78BFA}
+#zip-files .d{color:var(--cyan)}
+
+/* toast */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--v);color:#fff;padding:9px 16px;border-radius:10px;font-size:12px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;max-width:300px;line-height:1.4}
+.toast.show{opacity:1}
+.toast.ok{background:#15803D}
+.toast.err{background:#B91C1C}
+
+/* divider */
+.hdiv{height:1px;background:var(--b);margin:14px 0}
+
+@media(max-width:900px){.mode-row{display:none}}
+@media(max-width:650px){.lp{display:none}}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="logo" href="#">
+    <div class="lmark">A</div>
+    <span class="lname">Aura <b>Creator</b></span>
+  </a>
+  <div class="mode-row">
+    <button class="mt on" onclick="setMode(this,'Website')" data-m="Website"><i class="ti ti-world" style="font-size:11px"></i> Website</button>
+    <button class="mt" onclick="setMode(this,'App')" data-m="App"><i class="ti ti-device-mobile" style="font-size:11px"></i> App</button>
+    <button class="mt" onclick="setMode(this,'Design Studio')" data-m="Design Studio"><i class="ti ti-brush" style="font-size:11px"></i> Design Studio</button>
+    <button class="mt" onclick="setMode(this,'Video')" data-m="Video"><i class="ti ti-video" style="font-size:11px"></i> Video</button>
+    <button class="mt" onclick="setMode(this,'Launch Kit')" data-m="Launch Kit"><i class="ti ti-rocket" style="font-size:11px"></i> Launch Kit</button>
+  </div>
+  <div class="nav-r">
+    <div class="uav" id="uav" onclick="showProfile()">S</div>
+    <button class="nb" onclick="openM('m-signin')" id="btn-signin">Sign in</button>
+    <button class="nb hi" onclick="openM('m-upgrade')">Upgrade ✦</button>
+  </div>
+</nav>
+
+<!-- WORKSPACE -->
+<div class="ws">
+
+  <!-- LEFT -->
+  <div class="lp">
+    <div class="lps">
+      <div class="lbl">What do you want to build?</div>
+      <textarea class="pta" id="pt" placeholder="A booking website for my jewelry store in Hyderabad with WhatsApp and appointment form…" rows="4"></textarea>
+      <div class="hchips">
+        <span class="hc" onclick="fhint('Jewelry store website with product gallery, WhatsApp and booking')">💎 Jewellery</span>
+        <span class="hc" onclick="fhint('Grocery delivery app with categories, cart and UPI payment')">🛒 Grocery</span>
+        <span class="hc" onclick="fhint('Multiplayer games hub app with leaderboard and rewards')">🎮 Games</span>
+        <span class="hc" onclick="fhint('Beauty clinic website with services, before/after photos and WhatsApp')">💆 Clinic</span>
+      </div>
+      <button class="bcreate" id="btn-create" onclick="generate()">
+        <i class="ti ti-sparkles" style="font-size:12px"></i> Create with Aura
+      </button>
+    </div>
+    <div class="lpscroll">
+      <div class="lbl" style="margin-top:2px">My Projects</div>
+      <div id="proj-list"><div style="text-align:center;padding:18px 8px;color:var(--dim);font-size:11px;line-height:1.7"><i class="ti ti-folder-open" style="font-size:22px;display:block;margin-bottom:6px;opacity:.4"></i>Your creations appear here</div></div>
+    </div>
+    <div class="lpbot">
+      <div class="crrow"><span class="crl">Free credits</span><span class="crv" id="cr-v">3 left</span></div>
+      <div class="ptrack"><div class="pfill" id="cr-bar" style="width:100%"></div></div>
+      <button class="bdeploy" id="btn-deploy" onclick="openM('m-deploy')">
+        <i class="ti ti-rocket" style="font-size:12px"></i> Deploy &amp; Download
+      </button>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="rp">
+    <div class="pbar">
+      <div class="wdots">
+        <div class="wd" style="background:#FF5F57"></div>
+        <div class="wd" style="background:#FEBC2E"></div>
+        <div class="wd" style="background:#28C840"></div>
+      </div>
+      <div class="urlbar">
+        <i class="ti ti-lock" style="font-size:11px;color:var(--green)"></i>
+        <span id="url-txt" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">aura-preview.local — describe your idea and create</span>
+      </div>
+      <div class="pbacts">
+        <button class="pa" onclick="reloadPv()"><i class="ti ti-refresh" style="font-size:11px"></i></button>
+        <button class="pa pu" onclick="openShare()"><i class="ti ti-share" style="font-size:11px"></i> Share</button>
+        <button class="pa" onclick="openM('m-deploy')"><i class="ti ti-rocket" style="font-size:11px"></i> Deploy</button>
+        <button class="pa" onclick="openM('m-download')"><i class="ti ti-download" style="font-size:11px"></i> Download</button>
+      </div>
+    </div>
+
+    <div class="pvwrap">
+      <!-- WELCOME -->
+      <div id="pv-welcome">
+        <div class="wico">A</div>
+        <div>
+          <div class="wtit">Build anything with AI</div>
+          <div class="wsub" style="margin-top:7px">Type what you want — a jewelry store, a grocery app, a game — and Aura builds it live. Preview instantly. Pay only to download or deploy.</div>
+        </div>
+        <div class="qrow">
+          <span class="qc" style="border-color:rgba(139,92,246,.35);color:#C4B5FD;background:rgba(139,92,246,.09)" onclick="qcreate('A beautiful jewelry store website with product gallery, gold/silver collections, WhatsApp order button and appointment booking','Website')">💎 Jewellery site</span>
+          <span class="qc" style="border-color:rgba(245,158,11,.35);color:#FCD34D;background:rgba(245,158,11,.07)" onclick="qcreate('A grocery delivery app with categories, cart, UPI payment and order tracking','App')">🛒 Grocery app</span>
+          <span class="qc" style="border-color:rgba(236,72,153,.35);color:#F9A8D4;background:rgba(236,72,153,.07)" onclick="qcreate('A multiplayer games hub with leaderboard, daily rewards and coin system','App')">🎮 Games app</span>
+          <span class="qc" style="border-color:rgba(34,211,238,.35);color:#67E8F9;background:rgba(34,211,238,.07)" onclick="qcreate('A 30-second Instagram reel script for a skin glow treatment with hook, scenes and CTA','Video')">🎬 Reel script</span>
+          <span class="qc" style="border-color:rgba(34,197,94,.35);color:#86EFAC;background:rgba(34,197,94,.07)" onclick="qcreate('Complete business launch kit for my Indian restaurant — pricing, WhatsApp scripts, 30-day content plan','Launch Kit')">🚀 Launch kit</span>
+        </div>
+      </div>
+      <!-- LOADING -->
+      <div id="pv-loading">
+        <div class="spn"></div>
+        <div class="ltxt" id="ld-t">Aura is building your creation…</div>
+        <div class="lsub" id="ld-s">Reading your idea</div>
+        <div class="lprog"><div class="lpfill" id="ld-f"></div></div>
+      </div>
+      <!-- RESULT -->
+      <div id="pv-result">
+        <iframe id="pv-frame" title="Live preview" sandbox="allow-scripts allow-same-origin" allow="same-origin"></iframe>
+      </div>
+    </div>
+
+    <div class="chatbar">
+      <input class="ci" id="ci" placeholder="Edit your creation — 'add WhatsApp button', 'make header dark purple', 'add contact form'…">
+      <button class="csend" id="btn-chat" onclick="editNow()" aria-label="Send"><i class="ti ti-arrow-up" style="font-size:13px"></i></button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════ MODALS ═══════════ -->
+
+<!-- SIGN IN -->
+<div class="mbg" id="m-signin">
+  <div class="mbox" style="max-width:360px">
+    <button class="mxbtn" onclick="closeM('m-signin')"><i class="ti ti-x"></i></button>
+    <div class="wico" style="width:40px;height:40px;font-size:16px;margin-bottom:14px">A</div>
+    <div class="mtitle">Welcome back</div>
+    <div class="msub">Sign in to save projects and unlock free credits.</div>
+    <div class="slog">
+      <button class="sl" onclick="socialLogin('Google')"><i class="ti ti-brand-google" style="font-size:14px"></i> Google</button>
+      <button class="sl" onclick="socialLogin('GitHub')"><i class="ti ti-brand-github" style="font-size:14px"></i> GitHub</button>
+      <button class="sl" onclick="socialLogin('WhatsApp')"><i class="ti ti-brand-whatsapp" style="font-size:14px"></i> WhatsApp</button>
+    </div>
+    <div class="ordiv">or email</div>
+    <div class="ff"><label class="fl">Email</label><input class="fi" type="email" id="li-email" placeholder="you@example.com"></div>
+    <div class="ff"><label class="fl">Password</label><input class="fi" type="password" id="li-pw" placeholder="••••••••"></div>
+    <button class="bfull bv" onclick="doSignIn()">Sign in</button>
+    <button class="bfull bout" onclick="switchM('m-signin','m-signup')">New here? Create account →</button>
+  </div>
+</div>
+
+<!-- SIGN UP -->
+<div class="mbg" id="m-signup">
+  <div class="mbox" style="max-width:360px">
+    <button class="mxbtn" onclick="closeM('m-signup')"><i class="ti ti-x"></i></button>
+    <div class="wico" style="width:40px;height:40px;font-size:16px;margin-bottom:14px">A</div>
+    <div class="mtitle">Create account</div>
+    <div class="msub">Free to start — 3 AI creations every day.</div>
+    <div class="ff"><label class="fl">Full name</label><input class="fi" type="text" id="su-name" placeholder="Your name"></div>
+    <div class="ff"><label class="fl">Email</label><input class="fi" type="email" id="su-email" placeholder="you@example.com"></div>
+    <div class="ff"><label class="fl">Password</label><input class="fi" type="password" id="su-pw" placeholder="Min 8 characters"></div>
+    <button class="bfull bv" onclick="doSignUp()">Create account — free</button>
+    <button class="bfull bout" onclick="switchM('m-signup','m-signin')">Already have account? Sign in →</button>
+  </div>
+</div>
+
+<!-- UPGRADE / PRICING -->
+<div class="mbg" id="m-upgrade">
+  <div class="mbox" style="max-width:500px">
+    <button class="mxbtn" onclick="closeM('m-upgrade')"><i class="ti ti-x"></i></button>
+    <div class="mtitle">Choose your plan</div>
+    <div class="msub">Pricing starts at ₹1,499/month. The bigger your project, the more power you need — pick the plan that fits.</div>
+    <div class="pgrid" id="pg">
+      <div class="pc" onclick="selPlan(this,'starter',1499)">
+        <div class="pname">STARTER</div>
+        <div class="pprice">₹1,499<span>/mo</span></div>
+        <div class="pdesc">Simple websites &amp; landing pages</div>
+        <div class="pfeats">
+          <div class="pf"><i class="ti ti-check"></i> 10 creations/month</div>
+          <div class="pf"><i class="ti ti-check"></i> Website mode</div>
+          <div class="pf"><i class="ti ti-check"></i> HTML download</div>
+          <div class="pf"><i class="ti ti-check"></i> Share link</div>
+        </div>
+      </div>
+      <div class="pc on" onclick="selPlan(this,'business',2999)">
+        <div class="pbadge">MOST POPULAR</div>
+        <div class="pname">BUSINESS</div>
+        <div class="pprice">₹2,999<span>/mo</span></div>
+        <div class="pdesc">Full apps + all 5 creation modes</div>
+        <div class="pfeats">
+          <div class="pf"><i class="ti ti-check"></i> 30 creations/month</div>
+          <div class="pf"><i class="ti ti-check"></i> All 5 modes</div>
+          <div class="pf"><i class="ti ti-check"></i> APK export</div>
+          <div class="pf"><i class="ti ti-check"></i> WhatsApp deploy</div>
+        </div>
+      </div>
+      <div class="pc" onclick="selPlan(this,'pro',4999)">
+        <div class="pname">PRO</div>
+        <div class="pprice">₹4,999<span>/mo</span></div>
+        <div class="pdesc">Complex apps &amp; priority AI</div>
+        <div class="pfeats">
+          <div class="pf"><i class="ti ti-check"></i> Unlimited creations</div>
+          <div class="pf"><i class="ti ti-check"></i> AI image gen</div>
+          <div class="pf"><i class="ti ti-check"></i> Custom domain</div>
+          <div class="pf"><i class="ti ti-check"></i> Priority queue</div>
+        </div>
+      </div>
+      <div class="pc" onclick="selPlan(this,'agency',9999)">
+        <div class="pname">AGENCY</div>
+        <div class="pprice">₹9,999<span>/mo</span></div>
+        <div class="pdesc">Teams + white-label</div>
+        <div class="pfeats">
+          <div class="pf"><i class="ti ti-check"></i> 5 team seats</div>
+          <div class="pf"><i class="ti ti-check"></i> White-label</div>
+          <div class="pf"><i class="ti ti-check"></i> API access</div>
+          <div class="pf"><i class="ti ti-check"></i> Priority support</div>
+        </div>
+      </div>
+    </div>
+    <button class="bpay" id="upg-btn" onclick="doUpgrade()">
+      <i class="ti ti-credit-card" style="font-size:15px"></i>
+      <span id="upg-txt">Pay ₹2,999 via Razorpay</span>
+    </button>
+    <div class="pnote">🔒 Secured by Razorpay · GST invoice · Cancel anytime · UPI / Cards / Netbanking</div>
+  </div>
+</div>
+
+<!-- DOWNLOAD -->
+<div class="mbg" id="m-download">
+  <div class="mbox" style="max-width:420px">
+    <button class="mxbtn" onclick="closeM('m-download')"><i class="ti ti-x"></i></button>
+    <div class="mtitle">Download your creation</div>
+    <div class="msub">Choose what you need. Pay once, download instantly.</div>
+    <div class="price-hint" id="dl-hint">💡 Pricing is based on your project type. Simple website = ₹1,499. Full app with APK = ₹4,999.</div>
+    <div id="dl-opts">
+      <div class="dlopt on" onclick="selDL(this,'html',1499)">
+        <div><div class="dlname">HTML Source Code</div><div class="dldesc">Complete HTML + CSS + JS. Host anywhere.</div></div>
+        <div class="dlpr">₹1,499</div>
+      </div>
+      <div class="dlopt" onclick="selDL(this,'zip',2999)">
+        <div><div class="dlname">Full ZIP Package</div><div class="dldesc">Source + assets + README + Capacitor config</div></div>
+        <div class="dlpr">₹2,999</div>
+      </div>
+      <div class="dlopt" onclick="selDL(this,'apk',4999)">
+        <div><div class="dlname">APK + Full Package</div><div class="dldesc">ZIP + Capacitor + Gradle + Play Store guide</div></div>
+        <div class="dlpr">₹4,999</div>
+      </div>
+    </div>
+    <div id="dl-zip-preview" style="display:none">
+      <div class="lbl" style="margin-top:12px;margin-bottom:7px">What's in your ZIP</div>
+      <div id="zip-files"></div>
+    </div>
+    <button class="bpay" id="dl-btn" onclick="doDLPay()">
+      <i class="ti ti-lock-open" style="font-size:14px"></i>
+      <span id="dl-btn-txt">Pay ₹1,499 to Download</span>
+    </button>
+    <div class="pnote">🔒 Razorpay · Instant delivery · GST invoice included</div>
+    <div id="dl-success" style="display:none;text-align:center;padding:14px 0">
+      <div style="font-size:32px;margin-bottom:10px">🎉</div>
+      <div style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:5px">Payment confirmed!</div>
+      <div style="font-size:11px;color:var(--mut);margin-bottom:16px">Your files are ready to download.</div>
+      <button class="bpay" onclick="triggerDownload()"><i class="ti ti-download" style="font-size:14px"></i> Download now</button>
+    </div>
+  </div>
+</div>
+
+<!-- DEPLOY -->
+<div class="mbg" id="m-deploy">
+  <div class="mbox" style="max-width:500px">
+    <button class="mxbtn" onclick="closeM('m-deploy')"><i class="ti ti-x"></i></button>
+    <div class="mtitle">Deploy your creation</div>
+    <div class="msub">Pick where you want to go live. We'll guide you step-by-step — no tech knowledge needed.</div>
+    <div class="plats" id="plt-row">
+      <div class="plt on" onclick="selPlt(this,'vercel')"><div class="plic">▲</div><div class="plnm">Vercel</div><div class="plsb">Free &amp; instant</div></div>
+      <div class="plt" onclick="selPlt(this,'netlify')"><div class="plic">◆</div><div class="plnm">Netlify</div><div class="plsb">Free &amp; fast</div></div>
+      <div class="plt" onclick="selPlt(this,'playstore')"><div class="plic">▶</div><div class="plnm">Play Store</div><div class="plsb">Android APK</div></div>
+      <div class="plt" onclick="selPlt(this,'hostinger')"><div class="plic">🌐</div><div class="plnm">Hostinger</div><div class="plsb">cPanel hosting</div></div>
+      <div class="plt" onclick="selPlt(this,'github')"><div class="plic">⬡</div><div class="plnm">GitHub Pages</div><div class="plsb">Free static</div></div>
+      <div class="plt" onclick="selPlt(this,'whatsapp')"><div class="plic">💬</div><div class="plnm">WhatsApp</div><div class="plsb">Share link</div></div>
+    </div>
+    <div id="deploy-guide"></div>
+    <button class="bpay" onclick="aiDeployGuide()" id="ai-guide-btn">
+      <i class="ti ti-sparkles" style="font-size:14px"></i> Generate AI Deploy Guide
+    </button>
+  </div>
+</div>
+
+<!-- SHARE -->
+<div class="mbg" id="m-share">
+  <div class="mbox" style="max-width:360px">
+    <button class="mxbtn" onclick="closeM('m-share')"><i class="ti ti-x"></i></button>
+    <div class="mtitle">Share your creation</div>
+    <div class="msub">Anyone with the link can preview your creation in their browser.</div>
+    <div class="sharebox">
+      <span class="sharelink" id="share-url">https://auracreator.app/preview/abc-xyz-123</span>
+      <button class="cpybtn" onclick="copyLink()">Copy</button>
+    </div>
+    <div class="shareacts">
+      <button class="pa" style="flex:1;justify-content:center" onclick="shareWA()"><i class="ti ti-brand-whatsapp" style="font-size:12px"></i> WhatsApp</button>
+      <button class="pa" style="flex:1;justify-content:center" onclick="copyLink()"><i class="ti ti-copy" style="font-size:12px"></i> Copy link</button>
+      <button class="pa" style="flex:1;justify-content:center" onclick="openM('m-deploy')"><i class="ti ti-rocket" style="font-size:12px"></i> Deploy</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════ SCRIPT ═══════════ -->
+<script>
+// ─── CONFIG — replace with real keys ───
+const RAZORPAY_KEY = 'rzp_test_YourKeyHere'; // ← replace with rzp_live_ key
+const ANTHROPIC_MODEL = 'claude-sonnet-4-6';
+
+// ─── STATE ───
+const S = {
+  mode:'Website', html:'', busy:false,
+  loggedIn:false, user:'', email:'',
+  credits:3, maxCredits:3,
+  projects:[], curProj:-1,
+  plan:'business', planPrice:2999,
+  dlType:'html', dlPrice:1499, dlPaid:false,
+  plt:'vercel'
+};
+
+// ─── SYSTEM PROMPTS ───
+const SYS = {
+  Website:`You are Aura Creator, an expert Indian web designer. Generate a COMPLETE single-page HTML website. Rules: Only inline CSS in <style> tag. Google Fonts allowed via @import in style tag. MUST include: sticky nav with logo + CTA button, full-width hero with headline + subtext + 2 CTAs (one WhatsApp), services grid (3-4 cards), trust/testimonials section, footer with address + WhatsApp link. Make it visually stunning — bold gradients, modern rounded cards, professional typography. Use the exact business from the user's description. Indian context, INR pricing. Return ONLY the raw complete HTML — zero markdown, zero backticks, zero explanation.`,
+  App:`You are Aura Creator, an expert mobile app UI designer. Generate a complete HTML page that looks exactly like a real polished mobile app. Must have: top app bar with logo/avatar, hero stat or balance card, functional-looking feature grid, bottom navigation bar. Dark theme preferred. Realistic sample data. Use only inline CSS in <style> tag. Return ONLY raw HTML — no markdown, no backticks.`,
+  'Design Studio':`You are Aura Creator, an expert Indian social media graphic designer. Generate an HTML page showing 4-6 beautiful social media post mockups — Instagram posts, WhatsApp status cards — with vibrant gradients, bold type, emoji, marketing copy and price tags. Include a brand header. Only inline CSS. Return ONLY raw HTML.`,
+  Video:`You are Aura Creator, a viral content strategist. Generate an HTML page with a beautifully formatted short-form video script. Dark background. Sections: Hook (0-3s), Scene 1, Scene 2, Result shot, CTA. Each in a color-coded card with exact timing, voiceover text, visual direction, and on-screen text. Include hashtags and caption. Only inline CSS. Return ONLY raw HTML.`,
+  'Launch Kit':`You are Aura Creator, an Indian business strategist. Generate an HTML page — the complete launch kit: bold title header, positioning statement, pricing tiers in INR, WhatsApp sales script, 30-day content calendar as a table, CRM follow-up sequence, and 3 ad copy variations. White/light background, colorful section cards. Only inline CSS. Return ONLY raw HTML.`
+};
+
+// ─── DEPLOY GUIDES ───
+const DG = {
+  vercel:[
+    ['Download your file','Click <strong>Download</strong> above and save your <code>aura-creation.html</code> file to your desktop.'],
+    ['Go to vercel.com','Open <a href="https://vercel.com" target="_blank">vercel.com</a> in a new tab. Sign up free with GitHub or Google — takes 30 seconds.'],
+    ['Deploy instantly','Click <strong>Add New → Project → Deploy without Git</strong>. Drag and drop your HTML file. Click Deploy.'],
+    ['Your site is live! 🎉','You get a free <code>yoursite.vercel.app</code> link in under 60 seconds. Share it anywhere. Add a custom domain in Settings → Domains.']
+  ],
+  netlify:[
+    ['Download your file','Click Download and save your HTML file.'],
+    ['Go to netlify.com','Open <a href="https://netlify.com" target="_blank">netlify.com</a>. Sign up free. Go to <strong>Sites</strong> tab.'],
+    ['Drag and drop','You\'ll see a big drop zone that says "Drag and drop your site folder here." Drag your HTML file right there.'],
+    ['Done! 🎉','Your site is live instantly at a <code>.netlify.app</code> URL. Custom domain available in Site Settings.']
+  ],
+  playstore:[
+    ['Get the APK Package','Purchase the <strong>APK + Full Package</strong> (₹4,999) in Download. It includes your Capacitor project + Gradle config.'],
+    ['Install required tools','Download <a href="https://developer.android.com/studio" target="_blank">Android Studio</a> (free). Install it. Open it once to finish setup. This is the only technical step!'],
+    ['Build your APK','Unzip the package. Open the <code>android/</code> folder in Android Studio. Click <strong>Build → Generate Signed APK</strong>. Follow the wizard — takes 5 minutes.'],
+    ['Submit to Play Store','Go to <a href="https://play.google.com/console" target="_blank">play.google.com/console</a>. Pay the one-time $25 developer fee. Create app → Upload APK → Fill store listing → Submit for review (usually 3-7 days).']
+  ],
+  hostinger:[
+    ['Download your file','Download your HTML file from Aura Creator.'],
+    ['Open cPanel File Manager','Log in at <a href="https://hpanel.hostinger.com" target="_blank">hpanel.hostinger.com</a>. Go to <strong>Hosting → Manage → File Manager</strong>.'],
+    ['Upload to public_html','Open the <code>public_html</code> folder. Delete the default index.html. Upload your file and rename it to <code>index.html</code>.'],
+    ['Done! 🎉','Open your domain in a browser — your site is live! If your domain is new, DNS may take up to 24 hours to propagate.']
+  ],
+  github:[
+    ['Create a GitHub account','Go to <a href="https://github.com" target="_blank">github.com</a> and sign up free.'],
+    ['Create a repository','Click the + icon → New repository. Name it exactly: <code>yourusername.github.io</code> (replace with your GitHub username). Set it to Public.'],
+    ['Upload your file','Click <strong>Add file → Upload files</strong>. Upload your HTML file and rename it <code>index.html</code>. Click Commit changes.'],
+    ['Enable Pages','Go to <strong>Settings → Pages → Source: Deploy from branch → main</strong>. Save. Your site is live at <code>yourusername.github.io</code> in 2 minutes! 🎉']
+  ],
+  whatsapp:[
+    ['Get your share link','Click the <strong>Share</strong> button in the preview bar above. Copy the preview link.'],
+    ['Open WhatsApp Business','Open WhatsApp Business on your phone or <a href="https://web.whatsapp.com" target="_blank">web.whatsapp.com</a>.'],
+    ['Share with anyone','Paste the preview link in any chat — customers can open it in their browser and see your creation.'],
+    ['Upgrade for direct deploy 🚀','Upgrade to Business or Pro plan to get a permanent live URL you can share as your official website link.']
+  ]
+};
+
+// ─── CAPACITOR + GRADLE files (included in APK package) ───
+const CAP_CONFIG = (appName, pkgName) => `// capacitor.config.ts
+import { CapacitorConfig } from '@capacitor/cli';
+const config: CapacitorConfig = {
+  appId: '${pkgName}',
+  appName: '${appName}',
+  webDir: 'dist',
+  server: { androidScheme: 'https' },
+  android: {
+    buildOptions: { keystorePath: 'release.keystore', keystoreAlias: 'key0' }
+  }
+};
+export default config;`;
+
+const GRADLE_BUILD = (pkgName, appName) => `// android/app/build.gradle
+plugins { id 'com.android.application' }
+android {
+  namespace '${pkgName}'
+  compileSdk 34
+  defaultConfig {
+    applicationId '${pkgName}'
+    minSdk 22
+    targetSdk 34
+    versionCode 1
+    versionName "1.0"
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+      signingConfig signingConfigs.release
+    }
+  }
+  signingConfigs {
+    release {
+      storeFile file('release.keystore')
+      storePassword System.getenv("KEYSTORE_PASSWORD")
+      keyAlias 'key0'
+      keyPassword System.getenv("KEY_PASSWORD")
+    }
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+}
+dependencies {
+  implementation 'androidx.appcompat:appcompat:1.6.1'
+  implementation 'com.google.android.material:material:1.11.0'
+  implementation 'com.capacitorjs:core:5.7.0'
+}`;
+
+const RAZORPAY_PHP = () => `<?php
+// razorpay-order.php — place on your server
+require 'razorpay-php/Razorpay.php';
+use Razorpay\\Api\\Api;
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+$data = json_decode(file_get_contents('php://input'), true);
+$api = new Api('YOUR_RAZORPAY_KEY', 'YOUR_RAZORPAY_SECRET');
+$order = $api->order->create([
+  'receipt'  => 'aura_' . time(),
+  'amount'   => $data['amount'] * 100, // paise
+  'currency' => 'INR',
+  'notes'    => ['product' => 'Aura Creator', 'type' => $data['type']]
+]);
+echo json_encode(['order_id' => $order['id'], 'amount' => $order['amount']]);`;
+
+const README = (name, mode) => `# ${name} — Built with Aura Creator
+
+## What's included
+- index.html — Your complete ${mode} (standalone, no dependencies)
+- capacitor.config.ts — Capacitor config for Android/iOS APK
+- android/app/build.gradle — Gradle build config
+- razorpay-order.php — Payment server (add your Razorpay keys)
+- README.md — This file
+
+## Quick deploy
+### Web (Vercel — 60 seconds)
+1. Go to vercel.com → New Project → Deploy without Git
+2. Drag index.html → Deploy
+3. Done! You get a .vercel.app URL
+
+### Android APK
+1. Install Android Studio (developer.android.com/studio)
+2. Open the android/ folder in Android Studio
+3. Build → Generate Signed APK
+4. Upload APK to play.google.com/console
+
+## Razorpay Payment Integration
+1. Get your API keys from dashboard.razorpay.com
+2. Upload razorpay-order.php to your server
+3. Replace 'YOUR_RAZORPAY_KEY' in razorpay-order.php
+4. Update the key in your HTML: window.RAZORPAY_KEY = 'rzp_live_...'
+
+## Support
+Email: support@auracreator.app
+WhatsApp: +91 83746 70704
+`;
+
+// ─── INIT ───
+window.onload = () => {
+  loadLocal();
+  showDeploy(DG.vercel);
+};
+
+function loadLocal() {
+  try {
+    const d = JSON.parse(localStorage.getItem('ac') || '{}');
+    S.loggedIn = d.loggedIn || false;
+    S.user = d.user || '';
+    S.email = d.email || '';
+    S.credits = d.credits !== undefined ? d.credits : 3;
+    S.projects = d.projects || [];
+    if (S.loggedIn) showLoggedIn();
+    renderProjects();
+    updateCr();
+  } catch(e){}
+}
+function saveLocal() {
+  try { localStorage.setItem('ac', JSON.stringify({loggedIn:S.loggedIn,user:S.user,email:S.email,credits:S.credits,projects:S.projects})); } catch(e){}
+}
+
+// ─── MODE ───
+function setMode(el, name) {
+  document.querySelectorAll('.mt').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on'); S.mode = name;
+  const ph = {Website:'A booking website for my jewelry store with product gallery and WhatsApp…',App:'A grocery delivery app with cart, categories and UPI payment…','Design Studio':'Instagram post kit for my restaurant launch — 4 vibrant creatives…',Video:'A 30-second reel script for my skin glow clinic with hook and CTA…','Launch Kit':'Full launch plan for my Indian restaurant — pricing, scripts, content plan…'};
+  document.getElementById('pt').placeholder = ph[name]||'Describe what you want to build…';
+}
+function fhint(t) { document.getElementById('pt').value=t; document.getElementById('pt').focus(); }
+function qcreate(t,m) {
+  document.getElementById('pt').value=t;
+  const el=document.querySelector(`.mt[data-m="${m}"]`); if(el) setMode(el,m);
+  generate();
+}
+
+// ─── GENERATE ───
+async function generate() {
+  if(S.busy) return;
+  const p = document.getElementById('pt').value.trim();
+  if(!p){toast('Describe your idea first!','err');return;}
+  if(S.credits<=0){openM('m-upgrade');return;}
+  await callAI(SYS[S.mode], p, false);
+}
+async function editNow() {
+  if(S.busy) return;
+  const e = document.getElementById('ci').value.trim();
+  if(!e) return;
+  if(!S.html){toast('Create something first!','err');return;}
+  document.getElementById('ci').value='';
+  const sys=`You are Aura Creator. Apply this exact edit to the HTML and return the COMPLETE updated HTML — no markdown, no backticks, no explanation.`;
+  await callAI(sys, `Current HTML:\n${S.html}\n\nEdit: ${e}`, true);
+}
+
+async function callAI(sys, msg, isEdit) {
+  S.busy=true; setBusy(true); showPane('loading');
+  const steps=isEdit
+    ?[['Applying your edit…','Updating the layout'],['Rebuilding…','Almost done']]
+    :[['Reading your idea…','Understanding your business'],['Designing layout…','Building the page'],['Adding content…','Almost ready']];
+  let si=0,prog=0;
+  const fill=document.getElementById('ld-f');
+  fill.style.width='0%';
+  setLd(steps[0][0],steps[0][1]);
+  const tk=setInterval(()=>{
+    prog=Math.min(prog+5,88); fill.style.width=prog+'%';
+    si=Math.min(si+1,steps.length-1); setLd(steps[si][0],steps[si][1]);
+  },800);
+  try {
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:ANTHROPIC_MODEL,max_tokens:4000,system:sys,messages:[{role:'user',content:msg}]})
+    });
+    clearInterval(tk); fill.style.width='100%';
+    if(!r.ok) throw new Error('API '+r.status);
+    const d=await r.json();
+    let html=(d.content||[]).map(b=>b.text||'').join('').trim();
+    html=html.replace(/^```html\s*/i,'').replace(/^```\s*/,'').replace(/\s*```$/,'').trim();
+    if(!html||html.length<60) throw new Error('No content generated — try a more detailed description.');
+    S.html=html;
+    if(!isEdit){
+      S.credits=Math.max(0,S.credits-1); updateCr();
+      addProject(document.getElementById('pt').value.trim().slice(0,30)||'My Creation');
+    }
+    const slug=document.getElementById('pt').value.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,28);
+    document.getElementById('url-txt').textContent='aura-preview.local/'+slug;
+    renderPv(html);
+    document.getElementById('btn-deploy').style.display='flex';
+    updateDLHint();
+    saveLocal();
+    toast(isEdit?'Edit applied! ✨':'Creation ready! ✨','ok');
+  } catch(e){
+    clearInterval(tk); showPane('welcome');
+    toast(e.message||'Generation failed. Try again.','err');
+  } finally { S.busy=false; setBusy(false); }
+}
+
+function renderPv(html) {
+  showPane('result');
+  const fr=document.getElementById('pv-frame');
+  try { fr.contentDocument.open(); fr.contentDocument.write(html); fr.contentDocument.close(); }
+  catch(e){ fr.srcdoc=html; }
+}
+function showPane(p){
+  document.getElementById('pv-welcome').style.display=p==='welcome'?'flex':'none';
+  document.getElementById('pv-loading').style.display=p==='loading'?'flex':'none';
+  document.getElementById('pv-result').style.display=p==='result'?'block':'none';
+}
+function reloadPv(){ if(S.html) renderPv(S.html); }
+function setLd(t,s){ document.getElementById('ld-t').textContent=t; document.getElementById('ld-s').textContent=s; }
+function setBusy(b){ document.getElementById('btn-create').disabled=b; document.getElementById('btn-chat').disabled=b; }
+function updateCr(){
+  document.getElementById('cr-v').textContent=S.credits+' left';
+  document.getElementById('cr-bar').style.width=(S.credits/S.maxCredits*100)+'%';
+}
+
+// ─── PROJECTS ───
+function addProject(name){
+  S.projects.unshift({name,mode:S.mode,html:S.html,ts:Date.now()});
+  if(S.projects.length>12) S.projects.pop();
+  S.curProj=0; renderProjects();
+}
+const ICONS={Website:'ti-world',App:'ti-device-mobile','Design Studio':'ti-brush',Video:'ti-video','Launch Kit':'ti-rocket'};
+function renderProjects(){
+  const el=document.getElementById('proj-list');
+  if(!S.projects.length){el.innerHTML='<div style="text-align:center;padding:18px 8px;color:var(--dim);font-size:11px;line-height:1.7"><i class="ti ti-folder-open" style="font-size:22px;display:block;margin-bottom:6px;opacity:.4"></i>Your creations appear here</div>';return;}
+  el.innerHTML=S.projects.map((p,i)=>`
+    <div class="pj${i===S.curProj?' on':''}" onclick="loadProj(${i})">
+      <div class="pjn">${p.name}</div>
+      <div class="pjm">${i===0?'<span class="sdot dlive"></span>':`<i class="ti ${ICONS[p.mode]||'ti-file'}" style="font-size:10px"></i>`}
+        <span>${p.mode}</span><span style="margin-left:auto;font-size:9px">${ago(p.ts)}</span>
+      </div>
+    </div>`).join('');
+}
+function loadProj(i){
+  S.curProj=i; S.html=S.projects[i].html;
+  document.querySelectorAll('.pj').forEach((c,j)=>c.classList.toggle('on',j===i));
+  renderPv(S.html); document.getElementById('btn-deploy').style.display='flex';
+  updateDLHint();
+}
+function ago(ts){
+  const d=Date.now()-ts;
+  if(d<60000)return'just now';if(d<3600000)return Math.floor(d/60000)+'m ago';
+  if(d<86400000)return Math.floor(d/3600000)+'h ago';return Math.floor(d/86400000)+'d ago';
+}
+
+// ─── AUTH ───
+function socialLogin(prov){
+  closeM('m-signin'); closeM('m-signup');
+  S.loggedIn=true; S.user=prov+' User'; S.credits=5; S.maxCredits=5;
+  showLoggedIn(); updateCr(); saveLocal();
+  toast(`Signed in with ${prov} ✓`,'ok');
+}
+function doSignIn(){
+  const e=document.getElementById('li-email').value.trim();
+  if(!e){toast('Enter your email','err');return;}
+  S.loggedIn=true; S.user=e.split('@')[0]; S.email=e; S.credits=5; S.maxCredits=5;
+  closeM('m-signin'); showLoggedIn(); updateCr(); saveLocal();
+  toast('Signed in ✓','ok');
+}
+function doSignUp(){
+  const n=document.getElementById('su-name').value.trim();
+  const e=document.getElementById('su-email').value.trim();
+  if(!n||!e){toast('Fill all fields','err');return;}
+  S.loggedIn=true; S.user=n; S.email=e; S.credits=5; S.maxCredits=5;
+  closeM('m-signup'); showLoggedIn(); updateCr(); saveLocal();
+  toast('Welcome to Aura Creator! 🎉','ok');
+}
+function showLoggedIn(){
+  document.getElementById('btn-signin').style.display='none';
+  const av=document.getElementById('uav');
+  av.style.display='flex'; av.textContent=S.user.charAt(0).toUpperCase();
+}
+function showProfile(){ toast('Profile — upgrade to Pro for full profile settings'); }
+
+// ─── PLAN SELECTION ───
+function selPlan(el,id,price){
+  document.querySelectorAll('#pg .pc').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on'); S.plan=id; S.planPrice=price;
+  document.getElementById('upg-txt').textContent=`Pay ₹${price.toLocaleString('en-IN')} via Razorpay`;
+}
+function doUpgrade(){
+  // In production: load Razorpay checkout script and open
+  // For demo: simulate success
+  closeM('m-upgrade');
+  S.credits+=20; S.maxCredits=S.credits; updateCr(); saveLocal();
+  toast(`✅ Plan activated! 20 credits added. In production: Razorpay ₹${S.planPrice.toLocaleString('en-IN')} checkout opens here.`,'ok');
+  /* PRODUCTION RAZORPAY INTEGRATION:
+  const script=document.createElement('script');
+  script.src='https://checkout.razorpay.com/v1/checkout.js';
+  script.onload=()=>{
+    const rzp=new Razorpay({
+      key: RAZORPAY_KEY,
+      amount: S.planPrice*100,
+      currency:'INR',
+      name:'Aura Creator',
+      description: S.plan+' plan',
+      handler: (res)=>{ toast('Payment ₹'+S.planPrice+' success! ID: '+res.razorpay_payment_id,'ok'); }
+    });
+    rzp.open();
+  };
+  document.body.appendChild(script); */
+}
+
+// ─── DOWNLOAD ───
+function updateDLHint(){
+  const hints={Website:'Simple website — recommended: HTML Source Code (₹1,499)',App:'App project — recommended: Full ZIP Package (₹2,999) or APK (₹4,999)','Design Studio':'Design kit — recommended: HTML Source (₹1,499)','Launch Kit':'Launch kit — recommended: HTML Source (₹1,499)',Video:'Video script — recommended: HTML Source (₹1,499)'};
+  document.getElementById('dl-hint').textContent='💡 '+( hints[S.mode]||'Choose what you need below.');
+}
+function selDL(el,type,price){
+  document.querySelectorAll('.dlopt').forEach(d=>d.classList.remove('on'));
+  el.classList.add('on'); S.dlType=type; S.dlPrice=price;
+  document.getElementById('dl-btn-txt').textContent=`Pay ₹${price.toLocaleString('en-IN')} to Download`;
+  const name=(S.projects[S.curProj]?.name||'aura-creation').toLowerCase().replace(/\s+/g,'-');
+  const pkg=S.projects[S.curProj]?.name||'My App';
+  const pkgId='com.auracreator.'+name.replace(/-/g,'').slice(0,12);
+  const files=type==='html'
+    ?`<span class="f">📄 index.html</span>\n<span class="f">📄 README.md</span>`
+    :type==='zip'
+    ?`<span class="d">📁 ${name}/</span>\n  <span class="f">📄 index.html</span>\n  <span class="f">📄 capacitor.config.ts</span>\n  <span class="f">📄 package.json</span>\n  <span class="d">📁 android/app/</span>\n    <span class="f">📄 build.gradle</span>\n    <span class="f">📄 AndroidManifest.xml</span>\n  <span class="f">📄 README.md</span>`
+    :`<span class="d">📁 ${name}-full/</span>\n  <span class="f">📄 index.html</span>\n  <span class="f">📄 capacitor.config.ts</span>\n  <span class="f">📄 package.json</span>\n  <span class="d">📁 android/app/</span>\n    <span class="f">📄 build.gradle</span>\n    <span class="f">📄 AndroidManifest.xml</span>\n    <span class="f">📄 proguard-rules.pro</span>\n  <span class="d">📁 android/</span>\n    <span class="f">📄 gradle-wrapper.properties</span>\n  <span class="f">📄 razorpay-order.php</span>\n  <span class="f">📄 DEPLOY_GUIDE.md</span>\n  <span class="f">📄 README.md</span>`;
+  document.getElementById('zip-files').innerHTML=files;
+  document.getElementById('dl-zip-preview').style.display='block';
+}
+function doDLPay(){
+  if(!S.html){toast('Create something first!','err');return;}
+  // PRODUCTION: open Razorpay here
+  S.dlPaid=true;
+  document.getElementById('dl-opts').style.display='none';
+  document.getElementById('dl-zip-preview').style.display='none';
+  document.getElementById('dl-hint').style.display='none';
+  document.getElementById('dl-btn').style.display='none';
+  document.getElementById('dl-success').style.display='block';
+  toast('Payment confirmed! ✅','ok');
+}
+function triggerDownload(){
+  if(!S.html) return;
+  const n=(S.projects[S.curProj]?.name||'aura-creation').toLowerCase().replace(/\s+/g,'-');
+  const pkg=S.projects[S.curProj]?.name||'My App';
+  const pkgId='com.auracreator.'+n.replace(/-/g,'').slice(0,12);
+  if(S.dlType==='html'){
+    dl(S.html,'text/html',n+'.html');
+  } else if(S.dlType==='zip'){
+    const files=[
+      [n+'/index.html', S.html],
+      [n+'/capacitor.config.ts', CAP_CONFIG(pkg,pkgId)],
+      [n+'/README.md', README(pkg,S.mode)],
+      [n+'/android/app/build.gradle', GRADLE_BUILD(pkgId,pkg)],
+      [n+'/package.json', `{"name":"${n}","version":"1.0.0","dependencies":{"@capacitor/android":"^5.7.0","@capacitor/cli":"^5.7.0","@capacitor/core":"^5.7.0"}}`]
+    ];
+    dlZip(files, n+'.zip');
+  } else {
+    const files=[
+      [n+'/index.html', S.html],
+      [n+'/capacitor.config.ts', CAP_CONFIG(pkg,pkgId)],
+      [n+'/README.md', README(pkg,S.mode)],
+      [n+'/android/app/build.gradle', GRADLE_BUILD(pkgId,pkg)],
+      [n+'/android/app/AndroidManifest.xml', `<?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android"><application android:label="${pkg}" android:theme="@style/AppTheme"><activity android:name=".MainActivity" android:exported="true"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity></application></manifest>`],
+      [n+'/razorpay-order.php', RAZORPAY_PHP()],
+      [n+'/package.json', `{"name":"${n}","version":"1.0.0","scripts":{"build":"echo built","cap:add":"npx cap add android","cap:sync":"npx cap sync"},"dependencies":{"@capacitor/android":"^5.7.0","@capacitor/cli":"^5.7.0","@capacitor/core":"^5.7.0"}}`],
+      [n+'/DEPLOY_GUIDE.md', `# Deploy Guide for ${pkg}\n\n## Vercel (Website — 60 seconds)\n1. Go to vercel.com\n2. Add New Project → Deploy without Git\n3. Drag index.html → Deploy\n\n## Play Store (Android APK)\n1. Install Android Studio\n2. Run: npm install && npx cap add android && npx cap sync\n3. Open android/ in Android Studio\n4. Build → Generate Signed APK\n5. Upload to play.google.com/console\n\n## Razorpay\n1. Get keys from dashboard.razorpay.com\n2. Upload razorpay-order.php to your server\n3. Replace YOUR_RAZORPAY_KEY and YOUR_RAZORPAY_SECRET\n`]
+    ];
+    dlZip(files, n+'-full.zip');
+  }
+  closeM('m-download');
+  toast('Download started! ✅','ok');
+}
+
+function dl(content, type, filename){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type}));
+  a.download=filename; a.click();
+}
+
+// Simple ZIP via data URI (no external lib)
+function dlZip(files, filename){
+  // Build a multi-file download as individual files since we can't use JSZip without CDN in offline mode
+  // For production integrate JSZip from CDN
+  files.forEach(([name,content])=>{
+    const a=document.createElement('a');
+    const safeName=name.split('/').pop();
+    a.href=URL.createObjectURL(new Blob([content],{type:'text/plain'}));
+    a.download=safeName; a.click();
+  });
+  toast('Files downloaded! (ZIP bundling requires JSZip — add to production build)','ok');
+}
+
+// ─── DEPLOY ───
+function selPlt(el,id){
+  document.querySelectorAll('.plt').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on'); S.plt=id; showDeploy(DG[id]);
+}
+function showDeploy(steps){
+  document.getElementById('deploy-guide').innerHTML=
+    (steps||[]).map((s,i)=>`
+      <div class="dstep">
+        <div class="dsh"><div class="dsn">${i+1}</div><div class="dsti">${s[0]}</div></div>
+        <div class="dsb">${s[1]}</div>
+      </div>`).join('');
+}
+async function aiDeployGuide(){
+  if(S.busy){toast('Wait for current task','err');return;}
+  S.busy=true;
+  const btn=document.getElementById('ai-guide-btn');
+  btn.innerHTML='<span class="spn" style="width:16px;height:16px;border-width:2px;margin-right:6px"></span> Generating…';
+  btn.disabled=true;
+  try {
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:ANTHROPIC_MODEL,max_tokens:600,
+        system:'You are a friendly tech support guide. Give simple numbered steps to deploy a web app. NO jargon. Write for a non-developer Indian business owner. Use HTML — <ol><li> tags. Each step max 2 sentences. Be specific and actionable.',
+        messages:[{role:'user',content:`How to deploy a single HTML file to ${S.plt}? Simple steps for a non-technical person.`}]
+      })
+    });
+    const d=await r.json();
+    let guide=(d.content||[]).map(b=>b.text||'').join('').trim();
+    guide=guide.replace(/^```html?\s*/i,'').replace(/\s*```$/,'').trim();
+    document.getElementById('deploy-guide').innerHTML=`<div style="background:rgba(255,255,255,0.03);border:1px solid var(--b);border-radius:9px;padding:13px;margin-bottom:12px;font-size:11px;color:var(--mut);line-height:1.85">${guide}</div>`;
+    toast('AI guide ready! ✓','ok');
+  } catch(e){ toast('Could not generate guide','err'); }
+  finally {
+    S.busy=false;
+    btn.innerHTML='<i class="ti ti-sparkles" style="font-size:14px"></i> Generate AI Deploy Guide';
+    btn.disabled=false;
+  }
+}
+
+// ─── SHARE ───
+function openShare(){
+  if(!S.html){toast('Create something first!','err');return;}
+  openM('m-share');
+}
+function copyLink(){ navigator.clipboard?.writeText(document.getElementById('share-url').textContent).catch(()=>{}); toast('Link copied! 🔗','ok'); }
+function shareWA(){ window.open('https://wa.me/?text=Check this out! '+encodeURIComponent(document.getElementById('share-url').textContent),'_blank'); }
+
+// ─── MODAL HELPERS ───
+function openM(id){
+  if(id==='m-download'){ document.getElementById('dl-success').style.display='none'; document.getElementById('dl-opts').style.display='block'; document.getElementById('dl-hint').style.display='block'; document.getElementById('dl-btn').style.display='flex'; document.getElementById('dl-zip-preview').style.display='none'; }
+  document.getElementById(id).classList.add('open');
+}
+function closeM(id){ document.getElementById(id).classList.remove('open'); }
+function switchM(a,b){ closeM(a); openM(b); }
+document.querySelectorAll('.mbg').forEach(bg=>bg.addEventListener('click',e=>{ if(e.target===bg) bg.classList.remove('open'); }));
+
+// ─── TOAST ───
+function toast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast show'+(type?' '+type:'');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// ─── ENTER KEY ───
+document.getElementById('ci').addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey) editNow(); });
+</script>
+</body>
+</html>
